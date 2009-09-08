@@ -1,6 +1,14 @@
 <?php
 // $Id$
 
+/**
+ * @file
+ * Main module for the imagecache action
+ */
+
+/**
+ * Implementation of hook_imagecache_actions().
+ */
 function imagecache_action_cover_imagecache_actions() {
   $actions = array(
     'imagecache_action_cover' => array(
@@ -11,19 +19,18 @@ function imagecache_action_cover_imagecache_actions() {
   return $actions;
 }
 
-function imagecache_action_cover_form($data)
-{
+function imagecache_action_cover_form($data) {
   $form['width'] = array(
     '#type' => 'textfield',
     '#title' => t('Width'),
-    '#required' => true,
+    '#required' => TRUE,
     '#default_value' => $data['width'],
     '#description' => t('Enter a width in pixels'),
   );
   $form['height'] = array(
     '#type' => 'textfield',
     '#title' => t('Height'),
-    '#required' => true,
+    '#required' => TRUE,
     '#default_value' => $data['height'],
     '#description' => t('Enter a height in pixels'),
   );
@@ -51,28 +58,28 @@ function imagecache_action_cover_image(&$image, $data) {
   $tw = $data['width'];
   $th = $data['height'];
   $center = isset($data['center']) && $data['center'];
-  
-  if($w == $tw && $h == $th)
-    return true;
-  
+
+  if ($w == $tw && $h == $th) {
+    return TRUE;
+  }
+
   $r = min($w / $tw, $h / $th);
-  if($r!=1) {
+  if ($r != 1) {
     imageapi_image_resize($image, $w/$r, $h/$r);
   }
 
-  $cow = $center ? ($w/$r-$tw)/2 : 0;
-  $coh = $center ? ($h/$r-$th)/2 : 0;
+  $cow = $center ? ($w / $r - $tw) / 2 : 0;
+  $coh = $center ? ($h / $r - $th) / 2 : 0;
 
   imageapi_image_crop($image, $cow, $coh, $tw, $th);
-  return true;
+
+  return TRUE;
 }
 
-function imagecache_action_cover_enable()
-{
+function imagecache_action_cover_enable() {
   cache_clear_all('imagecache_actions', 'cache');
 }
 
-function imagecache_action_cover_disable()
-{
+function imagecache_action_cover_disable() {
   cache_clear_all('imagecache_actions', 'cache');
 }
